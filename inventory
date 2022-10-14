@@ -1,2 +1,4 @@
-10.0.0.5
-10.0.0.6
+[linux]
+centos ansible_host=10.0.0.5 ansible_python_interpreter=/usr/bin/python3
+ubuntu ansible_host=10.0.0.6 ansible_python_interpreter=/usr/bin/python3
+
