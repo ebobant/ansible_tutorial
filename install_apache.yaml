@@ -7,34 +7,41 @@
     yum:
       name: httpd
       state: installed
-    when: ansible_os_family == "RedHat"
+    when: ansible_distribution == "CentOS"
     tags: install_apache
 
   - name: start httpd service
     service:
       name: httpd
       state: started
-    when: ansible_os_family == "RedHat"
+    when: ansible_distribution == "CentOS"
     tags: start_apache
 
   - name: install apache2 package
     apt:
       name: apache2
       state: present
-    when: ansible_os_family == "Debian"
+    when: ansible_distribution == "Ubuntu"
     tags: install_apache
 
   - name: start apache2
     service:
       name: apache2
       state: started
-    when: ansible_os_family == "Debian"
+    when: ansible_distribution == "Ubuntu"
     tags: start_apache
 
   - name: add php support for apache2
     apt:
       name: libapache2-mod-php
       state: present
-    when: ansible_os_family == "Debian"
-    tags: insta install_php_supportt
+    when: ansible_distribution == "Ubuntu"
+    tags: install_php_support_Ubuntu
+
+  - name: add php support for apache2
+    yum:
+      name: php
+      state: present
+    when: ansible_distribution == "CentOS"
+    tags: install_php_support_CentOS
 
