@@ -1,4 +1,22 @@
 ---
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: install_updates CentOS
+    yum:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "CentOS"
+    tags: always
+
+  - name: install_updates Ubuntu
+    apt:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Ubuntu"
+    tags: always
+
 
 - hosts: all
   become: true
@@ -17,8 +35,25 @@
     service:
       name: httpd
       state: started
+      enabled: yes
     when: ansible_distribution == "CentOS"
     tags: start_apache
+
+  - name: change email address for admin
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin root@localhost.gmail
+    when: ansible_distribution == "CentOS"
+    tags: lineinfile_httpd
+    register: httpd # this is output var only for this change!!!!
+
+  - name: restart httpd
+    service:
+      name: httpd
+      state: restarted
+    when: httpd.changed
+    tags: httpd_restart
 
   - name: install apache2 package
     apt:
@@ -34,6 +69,7 @@
     service:
       name: apache2
       state: started
+      enabled: yes
     when: ansible_distribution == "Ubuntu"
     tags: start_apache
 
@@ -45,23 +81,6 @@
       owner: demousr
       group: root
     tags: index_html
-
-- hosts: all
-  become: true
-  tasks:
-
-  - name: install unzip
-    package:
-      name: unzip
-
-  - name: install terraform 
-    unarchive: 
-      src: https://releases.hashicorp.com/terraform/1.3.2/terraform_1.3.2_linux_amd64.zip
-      dest: /usr/local/bin
-      remote_src: yes
-      mode: 0755
-      owner: demousr
-      group: root
 
 
 - hosts: centos_srv

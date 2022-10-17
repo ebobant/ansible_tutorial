@@ -1,0 +1,43 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: create user
+    user:
+      name: ebobant
+      group: root
+    tags: always
+
+  - name: add ssh key for ebobant
+    authorized_key:
+      user: ebobant
+      key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDTxLgizMwX4Uaqf37+wS7tN41vc7+HN2peI+mV750aibyvK7ZWJS4ZrFGLPQEHwLveJXJFQVg0VnLOUjcIrNrSrREss5gxk7X6htVJDBboW6PA2liDiWcZgfgZ64Fe9hpy9gUUVa2YJ+Ank6JW6sTwHZ5Kl1qmyWMBNfYh2TizsPESn0d++4QUiCwBsgYoOuWKHQmM3+EycjX79tIVCUUNG32VizgFMDd29uU7yhb0Ixxz//ucp4t5po50jTsxrlRHzo3AHFrBuCO305KyJ9WWPoeruItHYez+yksw+elbFPtFbIw+bkMzNcw4JLoZ6shPswrnc5mnQLWJkagBr3Z0EjXMlIzqGCIiDWzF+zhTsBuFkg5w9zceByxfuamu3VSz6pcV/AMO+32IgODS7xuwFKnkgdYG4qR4uJpIpkTEYL+GFlZ25hsCM0vKzGTdBcPkW+22xIONSCOBW8qG0pRYTyi7n4NIrifBkQcDAmTl/n5hOUSCIi/deQ76Hxdly+k= ansible"
+
+  - name: add sudoers file for eboboant
+    copy:
+      src: sudoer_ebobant
+      dest: /etc/sudoers.d/ebobant
+      owner: root
+      group: root
+      mode: 0440
+
+
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: install unzip
+    package:
+      name: unzip
+
+  - name: install terraform
+    unarchive:
+      src: https://releases.hashicorp.com/terraform/1.3.2/terraform_1.3.2_linux_amd64.zip
+      dest: /usr/local/bin
+      remote_src: yes
+      mode: 0755
+      owner: demousr
+      group: root
