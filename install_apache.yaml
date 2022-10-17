@@ -1,14 +1,17 @@
 ---
-- name: this playbook insatll packages
-  hosts: all
+
+- hosts: all
   become: true
   tasks:
   - name: install httpd package
     yum:
-      name: httpd
-      state: installed
+      name: 
+        - httpd
+        - php  
+      state: latest
+      update_cache: yes
     when: ansible_distribution == "CentOS"
-    tags: install_apache
+    #tags: install_apache
 
   - name: start httpd service
     service:
@@ -19,8 +22,11 @@
 
   - name: install apache2 package
     apt:
-      name: apache2
-      state: present
+      name: 
+        - apache2
+        - libapache2-mod-php  
+      state: latest
+      update_cache: yes
     when: ansible_distribution == "Ubuntu"
     tags: install_apache
 
@@ -31,17 +37,21 @@
     when: ansible_distribution == "Ubuntu"
     tags: start_apache
 
-  - name: add php support for apache2
-    apt:
-      name: libapache2-mod-php
-      state: present
-    when: ansible_distribution == "Ubuntu"
-    tags: install_php_support_Ubuntu
-
-  - name: add php support for apache2
-    yum:
-      name: php
-      state: present
+ 
+- hosts: centos_srv
+  become: true
+  tasks: 
+  - name: Install mariadb on centos
+    yum: 
+      name: mariadb
+      state: latest
     when: ansible_distribution == "CentOS"
-    tags: install_php_support_CentOS
+
+  - name: start mariadb
+    systemd:
+      name: mariadb
+      state: restarted
+    when: ansible_distribution == "CentOS"
+    tags: start_mariadb
+
 

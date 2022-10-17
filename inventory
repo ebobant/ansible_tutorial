@@ -1,4 +1,7 @@
-[linux]
+[centos_srv]
+
 centos ansible_host=10.0.0.5 #ansible_python_interpreter=/usr/bin/python3
+
+[ubuntu_srv]
 ubuntu ansible_host=10.0.0.6 #ansible_python_interpreter=/usr/bin/python3
 
