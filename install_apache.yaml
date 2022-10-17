@@ -37,7 +37,15 @@
     when: ansible_distribution == "Ubuntu"
     tags: start_apache
 
- 
+  - name: copy a file
+    copy:
+      src: default_html.html
+      dest: /var/www/html/index.html
+      mode: 0644
+      owner: demousr
+      group: root
+    tags: index_html
+
 - hosts: centos_srv
   become: true
   tasks: 
@@ -47,11 +55,11 @@
       state: latest
     when: ansible_distribution == "CentOS"
 
-  - name: start mariadb
-    systemd:
-      name: mariadb
-      state: restarted
-    when: ansible_distribution == "CentOS"
-    tags: start_mariadb
+    # - name: start mariadb
+    #systemd:
+    #name: mariadb
+    # state: restarted
+    #when: ansible_distribution == "CentOS"
+    #tags: start_mariadb
 
 
