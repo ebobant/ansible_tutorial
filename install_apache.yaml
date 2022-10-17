@@ -46,6 +46,24 @@
       group: root
     tags: index_html
 
+- hosts: all
+  become: true
+  tasks:
+
+  - name: install unzip
+    package:
+      name: unzip
+
+  - name: install terraform 
+    unarchive: 
+      src: https://releases.hashicorp.com/terraform/1.3.2/terraform_1.3.2_linux_amd64.zip
+      dest: /usr/local/bin
+      remote_src: yes
+      mode: 0755
+      owner: demousr
+      group: root
+
+
 - hosts: centos_srv
   become: true
   tasks: 
