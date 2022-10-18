@@ -1,31 +1,8 @@
----
-- hosts: all
-  become: true
-  pre_tasks:
-
-  - name: install_updates CentOS
-    yum:
-      update_cache: yes
-    changed_when: false
-    when: ansible_distribution == "CentOS"
-    tags: always
-
-  - name: install_updates Ubuntu
-    apt:
-      update_cache: yes
-    changed_when: false
-    when: ansible_distribution == "Ubuntu"
-    tags: always
-
-
-- hosts: all
-  become: true
-  tasks:
   - name: install httpd package
     yum:
-      name: 
+      name:
         - httpd
-        - php  
+        - php
       state: latest
       update_cache: yes
     when: ansible_distribution == "CentOS"
@@ -57,9 +34,9 @@
 
   - name: install apache2 package
     apt:
-      name: 
+      name:
         - apache2
-        - libapache2-mod-php  
+        - libapache2-mod-php
       state: latest
       update_cache: yes
     when: ansible_distribution == "Ubuntu"
@@ -81,39 +58,3 @@
       owner: demousr
       group: root
     tags: index_html
-
-- hosts: all
-  become: true
-  tasks:
-
-  - name: install unzip
-    package:
-      name: unzip
-
-  - name: install terraform
-    unarchive:
-      src: https://releases.hashicorp.com/terraform/1.3.2/terraform_1.3.2_linux_amd64.zip
-      dest: /usr/local/bin
-      remote_src: yes
-      mode: 0755
-      owner: demousr
-      group: root
-
-
-- hosts: centos_srv
-  become: true
-  tasks: 
-  - name: Install mariadb on centos
-    yum: 
-      name: mariadb
-      state: latest
-    when: ansible_distribution == "CentOS"
-
-    # - name: start mariadb
-    #systemd:
-    #name: mariadb
-    # state: restarted
-    #when: ansible_distribution == "CentOS"
-    #tags: start_mariadb
-
-

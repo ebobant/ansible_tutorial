@@ -16,3 +16,20 @@
     when: ansible_distribution == "Ubuntu"
     tags: always
 
+- name: pre-task installation
+  hosts: all
+  become: true
+  roles:
+    - site
+
+- name: apache installation
+  hosts: all
+  become: true
+  roles:
+    - apache
+
+- name: mariadb installation      
+  hosts: all
+  become: true
+  roles:
+    - database
